@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/bpmn-fiddle.iml" filepath="$PROJECT_DIR$/bpmn-fiddle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gPlusRipper.iml" filepath="$PROJECT_DIR$/gPlusRipper.iml" />
     </modules>
   </component>
 </project>
