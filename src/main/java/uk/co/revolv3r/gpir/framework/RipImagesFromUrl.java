@@ -20,23 +20,45 @@ public class RipImagesFromUrl
   private static final String PASS1_PATTERN = " id=\"%s(.*?)%s\" ";
   private static final String PASS2_PATTERN = " id=\"%s(.*?)%s\" ";
   String basePath = null;
-
+  private String output = null;
   
-  RipImagesFromUrl(String aPath)
+  RipImagesFromUrl(String aPath, String aUserId)
   {
-    this(aPath, true);
-  }
-  
-  RipImagesFromUrl(String aPath, Boolean aOption)
-  {
-    this.basePath = aPath;
+    output = getProfilePage(aPath+ aUserId);
 
-    System.out.println(firstPass(aPath));
+    Set<String> matches = getAlbumUrls(output, aUserId);
+
+    for (String item : matches)
+    {
+      System.out.println(item);
+    }
   }
 
-  public String curlIt(String aUrl) throws Exception{
-    StringBuilder urlBuilder = new StringBuilder(aUrl);
-    urlBuilder.append("?alt=json");
+  private Set<String> getAlbumUrls(String output, String userId) {
+    String regex = userId+ "/albumid/(.*?)\\?alt=json";
+
+    Set<String> allMatches = new HashSet<>();
+    Matcher m = Pattern.compile(regex)
+            .matcher(output);
+    while (m.find()) {
+      if(!allMatches.contains(m.group()))
+        allMatches.add(m.group());
+    }
+    return allMatches;
+  }
+
+//  RipImagesFromUrl(String aPath, Boolean aOption)
+//  {
+//    this.basePath = aPath;
+//
+//    output = firstPass(aPath);
+//
+//
+//  }
+
+  public String curlIt(String aUrl, String aUrlPrefix, String aUrlSuffix, String aRegex) throws Exception{
+    StringBuilder urlBuilder = new StringBuilder((aUrlPrefix!=null)?aUrlPrefix+aUrl : aUrl);
+    urlBuilder.append(aUrlSuffix);
 
     URL obj = new URL(urlBuilder.toString());
 
@@ -55,6 +77,7 @@ public class RipImagesFromUrl
     StringBuffer response = new StringBuffer();
 
     while ((line = in.readLine()) != null) {
+
       response.append(line);
     }
     in.close();
@@ -62,17 +85,22 @@ public class RipImagesFromUrl
     return response.toString();
   }
 
-  String firstPass(String aPath)
+  String getProfilePage(String aPath)
   {
     String returnValue= null;
     try{
-       curlIt(aPath);
+       returnValue= curlIt(aPath, null, "?alt=json", null);
     }
     catch (Exception e) {
+      returnValue = "Failed grab: " + e.getMessage();
     }
     return returnValue;
   }
-  
+
+  public String getOutput() {
+    return output;
+  }
+
 //  String secondPass(String xml, Collection<int[]> idMaps)
 //  {
 //    for (int[] idMap : idMaps)

@@ -14,7 +14,7 @@
         <div class="form-group">
             <label for="prefix" class="col-sm-3 control-label">GPlus URL</label>
             <div class="col-sm-6">
-                <input name="url" class="form-control input-sm" value="www.google.com"/>
+                <input name="url" class="form-control input-sm" value="https://get.google.com/u/0/albumarchive/116749500979671626219"/>
             </div>
         </div>
 
