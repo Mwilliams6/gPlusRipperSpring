@@ -2,6 +2,7 @@ package uk.co.revolv3r.gpir.web;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -34,9 +35,19 @@ public class MainController
   public @ResponseBody String uploadAndRenumber(final String url)
           throws IOException
   {
-    final String xml = mUrlParser.formatUrl(url);
+    final Set<String> albumUrls = mUrlParser.retrieveAlbumsFromProfile(url);
 
+    if (albumUrls.isEmpty())
+      return "Error: no matches";
 
-    return xml;
+    StringBuilder albumUrlsString = new StringBuilder();
+int i = 1;
+    for(String album : albumUrls)
+    {
+      String friendlyUrl = "<a href='http://photos.googleapis.com/data/entry/api/user/" + album+"'>"+i+"</a><br/>";
+      albumUrlsString.append(friendlyUrl);
+      i++;
+    }
+    return albumUrlsString.toString();
   }
 }

@@ -13,39 +13,100 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-public class RipImagesFromUrl
+class RipImagesFromUrl
 {
   private final String USER_AGENT = "Mozilla/5.0";
 
-  private static final String PASS1_PATTERN = " id=\"%s(.*?)%s\" ";
-  private static final String PASS2_PATTERN = " id=\"%s(.*?)%s\" ";
-  String basePath = null;
-  private String output = null;
-  
+  private Set<String> mAlbums = new HashSet<>();
+
+  /**
+   * Rip Image from URL
+   * @param aPath base url
+   * @param aUserId specific user id
+   */
   RipImagesFromUrl(String aPath, String aUserId)
   {
-    output = getProfilePage(aPath+ aUserId);
+    mAlbums = getProfilePage(aPath+aUserId, aUserId+ "/albumid/(.*?)\\?alt=json");
 
-    Set<String> matches = getAlbumUrls(output, aUserId);
+    //mAlbums = getAlbumUrls(output, aUserId+ "/albumid/(.*?)\\?alt=json");
 
-    for (String item : matches)
-    {
-      System.out.println(item);
-    }
+    //get images from album
+
+    //get download links
+
   }
 
-  private Set<String> getAlbumUrls(String output, String userId) {
-    String regex = userId+ "/albumid/(.*?)\\?alt=json";
-
-    Set<String> allMatches = new HashSet<>();
-    Matcher m = Pattern.compile(regex)
-            .matcher(output);
-    while (m.find()) {
-      if(!allMatches.contains(m.group()))
-        allMatches.add(m.group());
+  /**
+   * Get a profile page content
+   * @param aPath complete profile url
+   * @param aRegex the regex identifying individual albums
+   * @return a set of unique album urls
+   */
+  private Set<String> getProfilePage(String aPath, String aRegex)
+  {
+    Set<String> albumUrls = new HashSet<>();
+    try{
+      albumUrls.addAll(curlIt(aPath, null, "?alt=json", aRegex));
     }
-    return allMatches;
+    catch (Exception e) {
+      albumUrls.add("Failed grab: " + e.getMessage());
+    }
+    return albumUrls;
   }
+
+
+  private Set<String> curlIt(String aUrl, String aUrlPrefix, String aUrlSuffix, String aRegex) throws Exception{
+    Set<String> albumList = new HashSet<>();
+
+    String urlBuilder = (aUrlPrefix!=null)?aUrlPrefix+aUrl : aUrl;
+    urlBuilder += (aUrlSuffix!=null)?aUrlSuffix:"";
+
+    URL obj = new URL(urlBuilder);
+
+    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+    //con.setRequestMethod("GET");
+    //con.setRequestProperty("User-Agent", USER_AGENT);
+
+    BufferedReader in = new BufferedReader(
+            new InputStreamReader(con.getInputStream()));
+    String line;
+
+    while ((line = in.readLine()) != null) {
+      if(aRegex!=null) {
+        Matcher m = Pattern.compile(aRegex)
+                .matcher(line);
+
+        while (m.find()) {
+          if(!albumList.contains(m.group()))
+            albumList.add(m.group());
+        }
+      }
+      else {
+        albumList.add(line);
+      }
+    }
+    in.close();
+
+    return albumList;
+  }
+
+  Set<String> getAlbums() {
+    return mAlbums;
+  }
+
+
+
+//  private Set<String> getAlbumUrls(String output, String regex) {
+//
+//    Set<String> allMatches = new HashSet<>();
+//    Matcher m = Pattern.compile(regex)
+//            .matcher(output);
+//    while (m.find()) {
+//      if(!allMatches.contains(m.group()))
+//        allMatches.add(m.group());
+//    }
+//    return allMatches;
+//  }
 
 //  RipImagesFromUrl(String aPath, Boolean aOption)
 //  {
@@ -55,51 +116,6 @@ public class RipImagesFromUrl
 //
 //
 //  }
-
-  public String curlIt(String aUrl, String aUrlPrefix, String aUrlSuffix, String aRegex) throws Exception{
-    StringBuilder urlBuilder = new StringBuilder((aUrlPrefix!=null)?aUrlPrefix+aUrl : aUrl);
-    urlBuilder.append(aUrlSuffix);
-
-    URL obj = new URL(urlBuilder.toString());
-
-    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-    con.setRequestMethod("GET");
-    con.setRequestProperty("User-Agent", USER_AGENT);
-    //connection.setRequestProperty("Accept-Charset", "UTF-8");
-
-    System.out.println("\nSending request to URL : " + urlBuilder);
-    System.out.println("Response Code : " + con.getResponseCode());
-    System.out.println("Response Message : " + con.getResponseMessage());
-
-    BufferedReader in = new BufferedReader(
-            new InputStreamReader(con.getInputStream()));
-    String line;
-    StringBuffer response = new StringBuffer();
-
-    while ((line = in.readLine()) != null) {
-
-      response.append(line);
-    }
-    in.close();
-
-    return response.toString();
-  }
-
-  String getProfilePage(String aPath)
-  {
-    String returnValue= null;
-    try{
-       returnValue= curlIt(aPath, null, "?alt=json", null);
-    }
-    catch (Exception e) {
-      returnValue = "Failed grab: " + e.getMessage();
-    }
-    return returnValue;
-  }
-
-  public String getOutput() {
-    return output;
-  }
 
 //  String secondPass(String xml, Collection<int[]> idMaps)
 //  {
