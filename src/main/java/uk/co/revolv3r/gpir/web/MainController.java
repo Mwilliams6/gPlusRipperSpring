@@ -5,14 +5,13 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,41 +34,33 @@ public class MainController
   {
     return new ModelAndView("index");
   }
-  
+
+  @RequestMapping( method=RequestMethod.GET, value="/subView" )
+  public ModelAndView getSubView( Model model ) {
+    model.addAttribute( "user", "Joe Dirt" );
+    model.addAttribute( "time", new Date() );
+    return new ModelAndView( "subView" );
+  }
+
   @RequestMapping(value = "/parseUrl", method = RequestMethod.POST)
-  public @ResponseBody String uploadAndRenumber(final String url)
-          throws IOException
+  @ResponseBody
+  public Set<String> uploadAndRenumber(final String url, Model aModel)
+  throws IOException
   {
     final Set<String> albumUrls = mUrlParser.retrieveAlbumsFromProfile(url);
 
     if (albumUrls.isEmpty())
-      return "Error: no matches";
-
-    StringBuilder albumUrlsString = new StringBuilder();
+      return new HashSet<>(Arrays.asList("Error: no matches"));
 
     for(String album : albumUrls)
     {
-      //String friendlyUrl = "<a href='http://photos.googleapis.com/data/entry/api/user/" + album+"'>"+i+"</a><br/>";
-      //String correctedUrl = correctAlbumUrl(album);
-      //System.out.println(correctedUrl);
-      //albumUrlsString.append(correctedUrl);
-
-      //retrieve header into from corrected url
-      try
-      {
-        //final String actualAlbumUrl = mUrlParser.retrieveActualAlbumCanonical(correctedUrl);
-        System.out.println("oj did it");
-      }
-      catch (Exception e)
-      {
-
-      }
+      aModel.addAttribute("text", album);
 
 
     }
 
     //"<a href='"+correctedUrl+"'>"+correctedUrl+"</a><br/>"
-    return albumUrlsString.toString();
+    return albumUrls;
   }
 
 

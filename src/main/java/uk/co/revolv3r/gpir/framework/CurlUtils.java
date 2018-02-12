@@ -39,7 +39,7 @@ class CurlUtils
     return albumUrls;
   }
 
-  public String getActualAlbumPage(String aPath, String aRegex)
+  public String getActualAlbumPage(String aPath)
   {
     try{
       Set<String> values = curlIt(aPath, null, null, null, 300);
@@ -53,7 +53,7 @@ class CurlUtils
   }
 
 
-  private Set<String> curlIt(String aUrl, String aUrlPrefix, String aUrlSuffix, String aRegex, Integer aLimitChars) throws Exception{
+  public Set<String> curlIt(String aUrl, String aUrlPrefix, String aUrlSuffix, String aRegex, Integer aLimitChars) throws Exception{
     Set<String> albumList = new HashSet<>();
 
     String urlBuilder = (aUrlPrefix!=null)?aUrlPrefix+aUrl : aUrl;
@@ -72,7 +72,7 @@ class CurlUtils
     while ((line = in.readLine()) != null) {
       if (aLimitChars != null){
         line = line.substring(151, aLimitChars);
-        line = line.substring(0, line.charAt('"'));
+        line = line.substring(0, line.indexOf('"'));
 
         if(!albumList.contains(line))
           albumList.add(line);

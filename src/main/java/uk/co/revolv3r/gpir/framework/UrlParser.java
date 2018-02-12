@@ -3,7 +3,6 @@ package uk.co.revolv3r.gpir.framework;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
-import java.util.IllegalFormatException;
 import java.util.Set;
 
 @Component
@@ -17,10 +16,18 @@ public class UrlParser
     {
       validateInput(url);
       result=retrieveInitialAlbumPages(url);
+
       for (String pathurl : result){
         pathurl = correctAlbumUrl(pathurl);
         String secondaryResult = retrieveActualAlbumCanonical(pathurl);
-        System.out.println(secondaryResult);
+
+        Set<String> smallImages = retrievePhotosFromAlbum(secondaryResult);
+
+        for(String photoUrl : smallImages){
+          System.out.println(photoUrl);
+        }
+        //System.out.println(pathurl);
+        //System.out.println(secondaryResult);
       }
 
     } catch (IllegalArgumentException e)
@@ -28,6 +35,18 @@ public class UrlParser
       e.printStackTrace();
     }
     return result;
+  }
+
+  private Set<String> retrievePhotosFromAlbum(String aAlbumUrl) {
+    final CurlUtils curler = new CurlUtils();
+
+    try{
+      return curler.curlIt(aAlbumUrl, null, null, "<img src=\"(.*?)\"", null);
+    }catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+    return new HashSet<>();
   }
 
   private String correctAlbumUrl(String album) {
@@ -71,15 +90,9 @@ public class UrlParser
   }
 
   public String retrieveActualAlbumCanonical(String aUrl) {
-    Set<String> returnAlbums = new HashSet<>();
 
       final CurlUtils curler = new CurlUtils();
 
-      return curler.getActualAlbumPage(aUrl,
-              "albumarchive/(.*?)meta");
-
-    ///albumid/(.*?)\?alt=json
-
-    //return returnAlbums;
+      return curler.getActualAlbumPage(aUrl);
   }
 }

@@ -1,5 +1,19 @@
 <#import "layout/layout.ftl" as Layout/>
 <context:property-placeholder location="classpath:/application.properties" />
+<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+<script type="text/javascript">
+    function doAjaxPost() {
+
+        $.ajax({
+            type: "GET",
+            url: "subView",
+            success: function(response) {
+                $("#subViewDiv").html( response );
+            }
+        });
+    }
+</script>
 
 <@Layout.mainLayout>
 
@@ -21,7 +35,7 @@
         <div class="form-group">
             <label for="" class="col-sm-3 control-label"></label>
             <div class="col-sm-6">
-                <input type="submit" class="btn btn-info" value="Go!"/>
+                <input type="submit" class="btn btn-info" value="Go!" onclick="doAjaxPost();"/>
             </div>
         </div>
 
@@ -30,5 +44,8 @@
 
 
 <script src="${rc.contextPath}/js/upload.js"></script>
+
+<div id="subViewDiv"></div>
+
 </@Layout.mainLayout>
 
