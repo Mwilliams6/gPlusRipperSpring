@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,28 +14,12 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-class RipImagesFromUrl
+class CurlUtils
 {
   private final String USER_AGENT = "Mozilla/5.0";
 
   private Set<String> mAlbums = new HashSet<>();
 
-  /**
-   * Rip Image from URL
-   * @param aPath base url
-   * @param aUserId specific user id
-   */
-  RipImagesFromUrl(String aPath, String aUserId)
-  {
-    mAlbums = getProfilePage(aPath+aUserId, aUserId+ "/albumid/(.*?)\\?alt=json");
-
-    //mAlbums = getAlbumUrls(output, aUserId+ "/albumid/(.*?)\\?alt=json");
-
-    //get images from album
-
-    //get download links
-
-  }
 
   /**
    * Get a profile page content
@@ -42,11 +27,11 @@ class RipImagesFromUrl
    * @param aRegex the regex identifying individual albums
    * @return a set of unique album urls
    */
-  private Set<String> getProfilePage(String aPath, String aRegex)
+  public Set<String> getInitialAlbumPages(String aPath, String aRegex)
   {
     Set<String> albumUrls = new HashSet<>();
     try{
-      albumUrls.addAll(curlIt(aPath, null, "?alt=json", aRegex));
+      albumUrls.addAll(curlIt(aPath, null, "?alt=json", aRegex, null));
     }
     catch (Exception e) {
       albumUrls.add("Failed grab: " + e.getMessage());
@@ -54,8 +39,21 @@ class RipImagesFromUrl
     return albumUrls;
   }
 
+  public String getActualAlbumPage(String aPath, String aRegex)
+  {
+    try{
+      Set<String> values = curlIt(aPath, null, null, null, 300);
+      if (!values.isEmpty())
+        return values.iterator().next();
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
 
-  private Set<String> curlIt(String aUrl, String aUrlPrefix, String aUrlSuffix, String aRegex) throws Exception{
+
+  private Set<String> curlIt(String aUrl, String aUrlPrefix, String aUrlSuffix, String aRegex, Integer aLimitChars) throws Exception{
     Set<String> albumList = new HashSet<>();
 
     String urlBuilder = (aUrlPrefix!=null)?aUrlPrefix+aUrl : aUrl;
@@ -72,6 +70,16 @@ class RipImagesFromUrl
     String line;
 
     while ((line = in.readLine()) != null) {
+      if (aLimitChars != null){
+        line = line.substring(151, aLimitChars);
+        line = line.substring(0, line.charAt('"'));
+
+        if(!albumList.contains(line))
+          albumList.add(line);
+
+        break;
+      }
+
       if(aRegex!=null) {
         Matcher m = Pattern.compile(aRegex)
                 .matcher(line);
@@ -82,7 +90,8 @@ class RipImagesFromUrl
         }
       }
       else {
-        albumList.add(line);
+        if(!albumList.contains(line))
+          albumList.add(line);
       }
     }
     in.close();

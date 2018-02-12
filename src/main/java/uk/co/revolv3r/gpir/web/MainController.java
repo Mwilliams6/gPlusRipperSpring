@@ -2,6 +2,11 @@ package uk.co.revolv3r.gpir.web;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -41,13 +46,32 @@ public class MainController
       return "Error: no matches";
 
     StringBuilder albumUrlsString = new StringBuilder();
-int i = 1;
+
     for(String album : albumUrls)
     {
-      String friendlyUrl = "<a href='http://photos.googleapis.com/data/entry/api/user/" + album+"'>"+i+"</a><br/>";
-      albumUrlsString.append(friendlyUrl);
-      i++;
+      //String friendlyUrl = "<a href='http://photos.googleapis.com/data/entry/api/user/" + album+"'>"+i+"</a><br/>";
+      //String correctedUrl = correctAlbumUrl(album);
+      //System.out.println(correctedUrl);
+      //albumUrlsString.append(correctedUrl);
+
+      //retrieve header into from corrected url
+      try
+      {
+        //final String actualAlbumUrl = mUrlParser.retrieveActualAlbumCanonical(correctedUrl);
+        System.out.println("oj did it");
+      }
+      catch (Exception e)
+      {
+
+      }
+
+
     }
+
+    //"<a href='"+correctedUrl+"'>"+correctedUrl+"</a><br/>"
     return albumUrlsString.toString();
   }
+
+
+
 }

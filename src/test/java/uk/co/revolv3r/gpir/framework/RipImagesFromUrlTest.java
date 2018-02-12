@@ -44,8 +44,7 @@ public class RipImagesFromUrlTest
   
   private static final  int FIRST = 2, SHIFT = 2, PADDING = 3;
   private static final String PFX = "_", SFX = "";
-  
-  private RipImagesFromUrl mapper;
+
 //
 //  @Before
 //  public void setUp() throws Exception
