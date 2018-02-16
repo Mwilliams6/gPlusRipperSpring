@@ -1,25 +1,21 @@
-package uk.co.revolv3r.gpir.web;
+package uk.co.revolv3r.gpir.web.controller;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.*;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
-import uk.co.revolv3r.gpir.config.GPIRConstants;
 import uk.co.revolv3r.gpir.framework.UrlParser;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/")
@@ -44,17 +40,17 @@ public class MainController
 
   @RequestMapping(value = "/parseUrl", method = RequestMethod.POST)
   @ResponseBody
-  public Set<String> uploadAndRenumber(final String url, Model aModel)
+  public Set<String> uploadAndRenumber(HttpServletRequest request, HttpServletResponse response)
   throws IOException
   {
-    final Set<String> albumUrls = mUrlParser.retrieveAlbumsFromProfile(url);
+    final Set<String> albumUrls = mUrlParser.retrieveAlbumsFromProfile(request.getParameter("urlPath"));
 
     if (albumUrls.isEmpty())
       return new HashSet<>(Arrays.asList("Error: no matches"));
 
     for(String album : albumUrls)
     {
-      aModel.addAttribute("text", album);
+      mUrlParser.retrieveImages(album);
 
 
     }

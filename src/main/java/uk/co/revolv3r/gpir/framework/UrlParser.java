@@ -1,9 +1,12 @@
 package uk.co.revolv3r.gpir.framework;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 public class UrlParser
@@ -11,24 +14,16 @@ public class UrlParser
   final String BASE_URL = "http://photos.googleapis.com/data/feed/api/user/";
   public Set<String> retrieveAlbumsFromProfile(String url)
   {
+
+    int i =0;
     Set<String> result = new HashSet<>();
     try
     {
       validateInput(url);
       result=retrieveInitialAlbumPages(url);
 
-      for (String pathurl : result){
-        pathurl = correctAlbumUrl(pathurl);
-        String secondaryResult = retrieveActualAlbumCanonical(pathurl);
 
-        Set<String> smallImages = retrievePhotosFromAlbum(secondaryResult);
 
-        for(String photoUrl : smallImages){
-          System.out.println(photoUrl);
-        }
-        //System.out.println(pathurl);
-        //System.out.println(secondaryResult);
-      }
 
     } catch (IllegalArgumentException e)
     {
@@ -36,6 +31,23 @@ public class UrlParser
     }
     return result;
   }
+
+
+  @Async
+  public CompletableFuture<Set<String>> retrieveImages(String passedValue)
+  {
+    passedValue = correctAlbumUrl(passedValue);
+    String secondaryResult = retrieveActualAlbumCanonical(passedValue);
+
+    return CompletableFuture.completedFuture(retrievePhotosFromAlbum(secondaryResult));
+
+
+    //System.out.println(pathurl);
+    //System.out.println(secondaryResult);
+
+  }
+
+
 
   private Set<String> retrievePhotosFromAlbum(String aAlbumUrl) {
     final CurlUtils curler = new CurlUtils();

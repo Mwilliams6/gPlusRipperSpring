@@ -12,17 +12,18 @@ import uk.co.revolv3r.gpir.util.BrowserUtil;
 public class GPlusImageRipperApplication {
 
 	public static void main(String[] args) {
-		final Logger logger = LoggerFactory.getLogger(GPlusImageRipperApplication.class);
-		try
-		{
-			logger.info("Launching GPlus Image Ripper");
-			final ConfigurableApplicationContext context = SpringApplication.run(
-					GPlusImageRipperApplication.class, args);
-			BrowserUtil.localHost(context.getEnvironment());
-		}
-		catch (Throwable aE)
-		{
-			logger.error("Problems: ", aE);
-		}
+//		final Logger logger = LoggerFactory.getLogger(GPlusImageRipperApplication.class);
+//		try
+//		{
+//			logger.info("Launching GPlus Image Ripper");
+//			final ConfigurableApplicationContext context = SpringApplication.run(
+//					GPlusImageRipperApplication.class, args);
+//			BrowserUtil.localHost(context.getEnvironment());
+//		}
+//		catch (Throwable aE)
+//		{
+//			logger.error("Problems: ", aE);
+//		}
+		SpringApplication.run(GPlusImageRipperApplication.class, args);
 	}
 }
