@@ -1,25 +1,27 @@
 package uk.co.revolv3r.gpir.framework;
 
+import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 
 class CurlUtils
 {
   private final String USER_AGENT = "Mozilla/5.0";
 
   private Set<String> mAlbums = new HashSet<>();
-
+  private final Logger mLogger =Logger.getLogger(CurlUtils.class);
 
   /**
    * Get a profile page content
@@ -29,22 +31,8 @@ class CurlUtils
    */
   public Set<String> getInitialAlbumPages(String aPath, String aRegex)
   {
-    Set<String> albumUrls = new HashSet<>();
     try{
-      albumUrls.addAll(curlIt(aPath, null, "?alt=json", aRegex, null));
-    }
-    catch (Exception e) {
-      albumUrls.add("Failed grab: " + e.getMessage());
-    }
-    return albumUrls;
-  }
-
-  public String getActualAlbumPage(String aPath)
-  {
-    try{
-      Set<String> values = curlIt(aPath, null, null, null, 300);
-      if (!values.isEmpty())
-        return values.iterator().next();
+      return parseXmlPath(aPath, aRegex);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -52,49 +40,38 @@ class CurlUtils
     return null;
   }
 
-
-  public Set<String> curlIt(String aUrl, String aUrlPrefix, String aUrlSuffix, String aRegex, Integer aLimitChars) throws Exception{
+  public Set<String> getActualAlbumPage(String aPath) throws IOException
+  {
     Set<String> albumList = new HashSet<>();
 
-    String urlBuilder = (aUrlPrefix!=null)?aUrlPrefix+aUrl : aUrl;
-    urlBuilder += (aUrlSuffix!=null)?aUrlSuffix:"";
+    Document doc = Jsoup.connect(aPath).get();
 
-    URL obj = new URL(urlBuilder);
+    mLogger.info(doc.title());
 
-    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-    //con.setRequestMethod("GET");
-    //con.setRequestProperty("User-Agent", USER_AGENT);
-
-    BufferedReader in = new BufferedReader(
-            new InputStreamReader(con.getInputStream()));
-    String line;
-
-    while ((line = in.readLine()) != null) {
-      if (aLimitChars != null){
-        line = line.substring(151, aLimitChars);
-        line = line.substring(0, line.indexOf('"'));
-
-        if(!albumList.contains(line))
-          albumList.add(line);
-
-        break;
-      }
-
-      if(aRegex!=null) {
-        Matcher m = Pattern.compile(aRegex)
-                .matcher(line);
-
-        while (m.find()) {
-          if(!albumList.contains(m.group()))
-            albumList.add(m.group());
-        }
-      }
-      else {
-        if(!albumList.contains(line))
-          albumList.add(line);
-      }
+    Elements matchingDivIds = doc.select("img");
+    for (Element headline : matchingDivIds) {
+      mLogger.info(String.format("%s\n",
+              headline.toString()));
+      albumList.add(headline.toString());
     }
-    in.close();
+
+    return albumList;
+  }
+
+
+  private Set<String> parseXmlPath(String aUrl, String aCssAttrib) throws Exception{
+    Set<String> albumList = new HashSet<>();
+
+    Document doc = Jsoup.connect(aUrl).get();
+
+    mLogger.info(doc.title());
+
+    Elements matchingDivIds = doc.select(aCssAttrib);
+    for (Element headline : matchingDivIds) {
+      mLogger.info(String.format("%s\n",
+              headline.toString()));
+      albumList.add(headline.toString());
+    }
 
     return albumList;
   }
