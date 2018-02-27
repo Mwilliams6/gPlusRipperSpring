@@ -1,5 +1,6 @@
 package uk.co.revolv3r.gpir.web.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @Controller
 @RequestMapping("/")
@@ -40,23 +42,31 @@ public class MainController
 
   @RequestMapping(value = "/parseUrl", method = RequestMethod.POST)
   @ResponseBody
-  public Set<String> uploadAndRenumber(HttpServletRequest request, HttpServletResponse response)
+  public ResponseEntity<?> uploadAndRenumber(HttpServletRequest request, HttpServletResponse response)
   throws IOException
   {
+    CompletableFuture<Set<String>> results = null;
     final Set<String> albumUrls = mUrlParser.retrieveAlbumsFromProfile(request.getParameter("urlPath"));
 
     if (albumUrls.isEmpty())
-      return new HashSet<>(Arrays.asList("Error: no matches"));
-
+      return ResponseEntity.ok("no data");
+int i =0;
     for(String album : albumUrls)
     {
-      mUrlParser.retrieveImages(album);
+      i++;
+      results = mUrlParser.retrieveImages(album);
 
+      if (i>2)
+      {
+
+        break;
+      }
 
     }
 
     //"<a href='"+correctedUrl+"'>"+correctedUrl+"</a><br/>"
-    return albumUrls;
+    //return albumUrls;
+    return ResponseEntity.ok(results);
   }
 
 
