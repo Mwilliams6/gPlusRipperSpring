@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6ee9db06-1f46-40ba-9936-37bd67279297" name="Default" comment="v6 - jsouped, need to pass back found files to parser page with ajax">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/uk/co/revolv3r/gpir/framework/UrlParser.java" afterPath="$PROJECT_DIR$/src/main/java/uk/co/revolv3r/gpir/framework/UrlParser.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/uk/co/revolv3r/gpir/web/controller/MainController.java" afterPath="$PROJECT_DIR$/src/main/java/uk/co/revolv3r/gpir/web/controller/MainController.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/resources/css/custom.css" afterPath="$PROJECT_DIR$/src/main/resources/resources/css/custom.css" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/index.ftl" afterPath="$PROJECT_DIR$/src/main/resources/templates/index.ftl" />
-      <change beforePath="$PROJECT_DIR$/target/classes/resources/css/custom.css" afterPath="$PROJECT_DIR$/target/classes/resources/css/custom.css" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/index.ftl" afterPath="$PROJECT_DIR$/target/classes/templates/index.ftl" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uk/co/revolv3r/gpir/framework/UrlParser.class" afterPath="$PROJECT_DIR$/target/classes/uk/co/revolv3r/gpir/framework/UrlParser.class" />
-    </list>
+    <list default="true" id="6ee9db06-1f46-40ba-9936-37bd67279297" name="Default" comment="" />
     <ignored path="bpmn-fiddle.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -126,7 +117,12 @@
     </findStrings>
   </component>
   <component name="Git.Settings">
-    <option name="UPDATE_TYPE" value="REBASE" />
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="mjw &lt;mwilliams6@gmail.com&gt;" />
+      </list>
+    </option>
+    <option name="UPDATE_TYPE" value="MERGE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GradleLocalSettings">
@@ -769,7 +765,7 @@
       <workItem from="1519584651924" duration="5708000" />
       <workItem from="1519677013806" duration="7735000" />
       <workItem from="1519767275706" duration="4261000" />
-      <workItem from="1519849898819" duration="7190000" />
+      <workItem from="1519849898819" duration="7679000" />
     </task>
     <task id="LOCAL-00001" summary="v0.1 - gets album json">
       <created>1518132982735</created>
@@ -824,18 +820,17 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="93016000" />
+    <option name="totallyTimeSpent" value="93505000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="1942" height="1056" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22091657" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32902467" sideWeight="0.49783784" order="13" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.41128084" sideWeight="0.36486486" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.41128084" sideWeight="0.36486486" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
