@@ -37,11 +37,11 @@ public class UrlParser
 
 
   @Async
-  public CompletableFuture<Set<String>> retrieveImages(String passedValue) throws IOException
+  public Set<String> retrieveImages(String passedValue) throws IOException
   {
     passedValue = correctAlbumUrl(passedValue);
 
-    return CompletableFuture.completedFuture(retrieveActualAlbumCanonical(passedValue));
+    return retrieveActualAlbumCanonical(passedValue);
 
   }
 

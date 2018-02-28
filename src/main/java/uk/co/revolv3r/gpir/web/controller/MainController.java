@@ -45,16 +45,24 @@ public class MainController
   public ResponseEntity<?> uploadAndRenumber(HttpServletRequest request, HttpServletResponse response)
   throws IOException
   {
-    CompletableFuture<Set<String>> results = null;
+    String returnStr = null;
+    int i =0;
+
+    Set<String> results = null;
     final Set<String> albumUrls = mUrlParser.retrieveAlbumsFromProfile(request.getParameter("urlPath"));
 
     if (albumUrls.isEmpty())
       return ResponseEntity.ok("no data");
-int i =0;
     for(String album : albumUrls)
     {
       i++;
       results = mUrlParser.retrieveImages(album);
+
+      for (String value : results)
+      {
+        returnStr += value;
+      }
+
 
       if (i>2)
       {
@@ -66,7 +74,7 @@ int i =0;
 
     //"<a href='"+correctedUrl+"'>"+correctedUrl+"</a><br/>"
     //return albumUrls;
-    return ResponseEntity.ok(results);
+    return ResponseEntity.ok(returnStr);
   }
 
 

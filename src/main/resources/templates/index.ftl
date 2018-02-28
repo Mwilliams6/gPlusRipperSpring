@@ -19,6 +19,8 @@
 
 
     function madeAjaxCall(){
+        $("#btn-search").prop("disabled", true);
+
         $.ajax({
             type: "post",
             url: "/ripper/parseUrl",
@@ -28,8 +30,8 @@
             data:'urlPath=' + $("#urlPath").val(),
             success: function (data) {
 
-                var json = "<h4>Ajax Response</h4><pre>"
-                        + JSON.stringify(data, null, 4) + "</pre>";
+                var json = "<h4>Ajax Response</h4>" + data;
+
                 $('#feedback').html(json);
 
                 console.log("SUCCESS : ", data);
@@ -38,8 +40,8 @@
             },
             error: function (e) {
 
-                var json = "<h4>Ajax Response</h4><pre>"
-                        + e.responseText + "</pre>";
+                var json = "<h4>Ajax Response</h4>"
+                        + e.responseText;
                 $('#feedback').html(json);
 
                 console.log("ERROR : ", e);
@@ -74,7 +76,8 @@
 </div>
 
 
-<div id="feedback">
+<div id="feedback" style="width:80%; margin: 0 auto;">
+
 
 </div>
 
